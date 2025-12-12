@@ -1,0 +1,134 @@
+# --- SERVIÇOS (DNS Fixo) ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: process-0
+spec:
+  selector:
+    app: process-0
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: process-1
+spec:
+  selector:
+    app: process-1
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: process-2
+spec:
+  selector:
+    app: process-2
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+
+# --- DEPLOYMENTS (Processos) ---
+
+# PROCESSO 0
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: process-0
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: process-0
+  template:
+    metadata:
+      labels:
+        app: process-0
+    spec:
+      containers:
+      - name: app
+        image: distributed-system:v1
+        imagePullPolicy: IfNotPresent 
+        ports:
+        - containerPort: 5000
+        env:
+        - name: PROCESS_ID
+          value: "0"
+        - name: PEER_0
+          value: "http://process-0:5000"
+        - name: PEER_1
+          value: "http://process-1:5000"
+        - name: PEER_2
+          value: "http://process-2:5000"
+
+# PROCESSO 1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: process-1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: process-1
+  template:
+    metadata:
+      labels:
+        app: process-1
+    spec:
+      containers:
+      - name: app
+        image: distributed-system:v1
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5000
+        env:
+        - name: PROCESS_ID
+          value: "1"
+        - name: PEER_0
+          value: "http://process-0:5000"
+        - name: PEER_1
+          value: "http://process-1:5000"
+        - name: PEER_2
+          value: "http://process-2:5000"
+
+# PROCESSO 2
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: process-2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: process-2
+  template:
+    metadata:
+      labels:
+        app: process-2
+    spec:
+      containers:
+      - name: app
+        image: distributed-system:v1
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5000
+        env:
+        - name: PROCESS_ID
+          value: "2"
+        - name: PEER_0
+          value: "http://process-0:5000"
+        - name: PEER_1
+          value: "http://process-1:5000"
+        - name: PEER_2
+          value: "http://process-2:5000"
