@@ -100,14 +100,10 @@ Execute os comandos abaixo no **Terminal 4**.
 
 ```bash
 # Configura atraso de 5s no Processo 1
-curl -X POST http://localhost:5001/config/delay 
-     -H "Content-Type: application/json" 
-     -d '{"seconds": 5}'
+curl -X POST http://localhost:5001/config/delay -H "Content-Type: application/json" -d '{"seconds": 5}'
 
 # Envia mensagem via Processo 0
-curl -X POST http://localhost:5000/initiate 
-     -H "Content-Type: application/json" 
-     -d '{"content": "Teste Q1"}'
+curl -X POST http://localhost:5000/initiate -H "Content-Type: application/json" -d '{"content": "Teste Q1"}'
 ```
 **Resultado Esperado:** Os logs devem mostrar o recebimento imediato, uma pausa de 5s, e depois a mensagem `DELIVERED` aparecendo simultaneamente em todos os nós.
 
